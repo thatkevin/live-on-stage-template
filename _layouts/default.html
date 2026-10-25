@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% if page.title %}{{ page.title }} — {% endif %}Live on Stage</title>
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}Live on Stage — young musicians form bands, write songs and perform live. A Tin Music and Arts Project in Coventry.{% endif %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Nunito', 'sans-serif'] },
+          colors: {
+            'tin-red':    '#d85b61',
+            'tin-yellow': '#edc656',
+            'los':      '#f97316',
+            'los-dark': '#c2410c',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .los-glow { text-shadow: 0 0 20px rgba(249,115,22,.6), 0 0 60px rgba(249,115,22,.25); }
+    #mobile-menu {
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+    #mobile-menu.mob-open {
+      opacity: 1; visibility: visible;
+      transition: opacity 0.3s ease;
+    }
+    :focus-visible { outline: 2px solid #f97316; outline-offset: 3px; border-radius: 2px; }
+  </style>
+  {% if page.extra_head %}{{ page.extra_head }}{% endif %}
+  {% if site.data.settings.analytics_snippet %}{{ site.data.settings.analytics_snippet }}{% endif %}
+</head>
+<body class="bg-zinc-950 text-white font-sans antialiased">
+
+<!-- Shared Tin bar: the parent (Tin) nav + logo, kept small and subtle (#523) -->
+<header id="tin-bar" class="sticky top-0 z-50 bg-black/95 backdrop-blur border-b border-zinc-900 transition-transform duration-300">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center h-11 gap-5">
+
+    <!-- The Tin logo -->
+    <a href="{{ site.data.settings.tin_url }}" class="flex items-baseline gap-1 flex-shrink-0 leading-none hover:opacity-80 transition-opacity" aria-label="The Tin — home">
+      <span class="text-xs font-semibold tracking-tight text-zinc-500">The</span>
+      <span class="text-sm font-black tracking-tight text-zinc-200">Tin</span>
+    </a>
+
+    <!-- Tin nav (subtle) -->
+    <nav class="hidden sm:flex items-center gap-0.5 flex-1" aria-label="The Tin navigation">
+      {% for item in site.data.settings.tin_navigation.primary %}
+      <a href="{{ item.path }}" class="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-200 transition-colors whitespace-nowrap">{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+
+    <button id="mobile-open-btn"
+            class="sm:hidden ml-auto flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors rounded"
+            aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      Menu
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobile-menu"
+     class="fixed inset-0 z-50 bg-black flex flex-col overflow-y-auto"
+     aria-hidden="true" role="dialog" aria-label="Mobile navigation">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-zinc-900">
+    <span class="text-lg font-black tracking-tight uppercase text-los">Live on Stage</span>
+    <button id="mobile-close-btn"
+            class="flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white transition-colors"
+            aria-label="Close menu">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+      Close
+    </button>
+  </div>
+  <nav class="flex-1 flex flex-col justify-center px-6 py-8" aria-label="Mobile navigation">
+    <ul class="flex flex-col divide-y divide-zinc-900">
+      {% for item in site.data.settings.tin_navigation.primary %}
+      <li><a href="{{ item.path }}" class="mob-link block py-5 text-3xl font-black text-white hover:text-los transition-colors">{{ item.label }}</a></li>
+      {% endfor %}
+      <li><a href="{{ site.data.settings.tin_url }}" class="mob-link block py-5 text-3xl font-black text-zinc-500 hover:text-white transition-colors">← The Tin</a></li>
+    </ul>
+  </nav>
+  <div class="px-6 py-5 border-t border-zinc-900">
+    <a href="https://the-tin.gigkit.site/#support" class="mob-link block w-full text-center bg-los text-black text-sm font-black px-8 py-3 rounded hover:bg-[#ea6a0c] transition-colors">
+      Support Live on Stage
+    </a>
+  </div>
+</div>
+
+{{ content }}
+
+<footer class="bg-black border-t border-zinc-900">
+  <div class="py-10 px-4 sm:px-6">
+    <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-8">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-3 h-3 rounded-full bg-los" aria-hidden="true"></span>
+          <span class="text-lg font-black tracking-tight uppercase text-los">Live on Stage</span>
+        </div>
+        <p class="text-xs text-zinc-500 leading-relaxed max-w-xs">Young musicians forming bands, writing songs and performing live - for instrumentalists aged 11-18 in Coventry.</p>
+        <p class="text-xs text-zinc-600 mt-3">A project of The Tin Music and Arts, Registered Charity No. 1152636</p>
+      </div>
+      <div class="flex flex-col gap-2 text-xs">
+        <p class="text-zinc-600 font-semibold uppercase tracking-widest mb-1">Links</p>
+        <a href="#programme" class="text-zinc-400 hover:text-white">Programme</a>
+        <a href="#about" class="text-zinc-400 hover:text-white">About</a>
+        <a href="https://the-tin.gigkit.site" class="text-zinc-400 hover:text-los">The Tin</a>
+        <a href="https://the-tin.gigkit.site/#support" class="text-zinc-400 hover:text-white">Donate</a>
+      </div>
+    </div>
+    <div class="max-w-screen-xl mx-auto mt-8 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-zinc-600">
+      <p>&copy; {{ site.time | date: "%Y" }} The Tin Music and Arts. Registered Charity No. 1152636.</p>
+      <a href="https://the-tin.gigkit.site" class="text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Back to The Tin
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var mobileMenu  = document.getElementById('mobile-menu');
+    var mobileOpen  = document.getElementById('mobile-open-btn');
+    var mobileClose = document.getElementById('mobile-close-btn');
+
+    function openMobile() {
+      mobileMenu.classList.add('mob-open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      mobileOpen.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      mobileClose.focus();
+    }
+
+    function closeMobile() {
+      mobileMenu.classList.remove('mob-open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      mobileOpen.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      mobileOpen.focus();
+    }
+
+    mobileOpen.addEventListener('click', openMobile);
+    mobileClose.addEventListener('click', closeMobile);
+    mobileMenu.querySelectorAll('.mob-link').forEach(function (el) {
+      el.addEventListener('click', closeMobile);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && mobileMenu.getAttribute('aria-hidden') === 'false') { closeMobile(); }
+    });
+    // Hide the Tin bar on scroll down, reveal on scroll up (#542)
+    var tinBar = document.getElementById('tin-bar');
+    if (tinBar) {
+      var lastY = window.scrollY, ticking = false;
+      window.addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = window.scrollY;
+          if (y > lastY && y > 80) { tinBar.classList.add('-translate-y-full'); }
+          else { tinBar.classList.remove('-translate-y-full'); }
+          lastY = y; ticking = false;
+        });
+      }, { passive: true });
+    }
+  }());
+</script>
+
+</body>
+</html>

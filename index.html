@@ -1,0 +1,106 @@
+---
+layout: default
+title: Live on Stage — A Tin Music and Arts Project
+---
+
+{% assign programme = site.data.programmes | where: "slug", "live-on-stage" | first %}
+
+<!-- Hero: loud, gig-poster energy -->
+<section class="relative bg-black overflow-hidden">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(249,115,22,0.25),transparent_55%)]"></div>
+  <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 pt-16 pb-14">
+    <img src="/images/logo.png" alt="Live on Stage" class="w-full max-w-xl mb-10" />
+    <h1 class="text-5xl sm:text-7xl font-black tracking-tight leading-[0.9] uppercase mb-6 los-glow">
+      Loud.<span class="text-los"> Live.</span> Yours.
+    </h1>
+    <p class="text-xl text-zinc-200 max-w-2xl leading-relaxed mb-8">
+      {% if site.data.snippets.los_hero_intro %}{{ site.data.snippets.los_hero_intro.body }}{% elsif programme and programme.description %}{{ programme.description }}{% else %}Young musicians form bands, write songs and play real gigs. For instrumentalists aged 11-18 at Grade 4 and above. No covers band - your music, on a proper stage.{% endif %}
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <a href="#programme" class="bg-los text-black text-sm font-black uppercase tracking-wide px-6 py-3 rounded hover:bg-[#ea6a0c] transition-colors">See the gigs</a>
+      <a href="https://the-tin.gigkit.site/#support" class="border-2 border-los text-los text-sm font-black uppercase tracking-wide px-6 py-3 rounded hover:bg-los hover:text-black transition-colors">Get involved</a>
+    </div>
+  </div>
+</section>
+
+<div class="h-1 bg-los"></div>
+
+<!-- About -->
+<section id="about" class="py-16 px-4 sm:px-6 bg-zinc-950">
+  <div class="max-w-2xl mx-auto">
+    <p class="text-xs tracking-[0.25em] uppercase text-los font-bold mb-4">The programme</p>
+    <h2 class="text-3xl sm:text-4xl font-black tracking-tight uppercase mb-6">{% if site.data.snippets.los_about_heading %}{{ site.data.snippets.los_about_heading.body }}{% else %}Start a band. Play it loud.{% endif %}</h2>
+    <p class="text-sm text-zinc-400 leading-relaxed mb-4">{% if site.data.snippets.los_about_p1 %}{{ site.data.snippets.los_about_p1.body }}{% else %}Live on Stage takes young instrumentalists and turns them into gigging bands - writing songs, rehearsing properly, and performing live to a real crowd.{% endif %}</p>
+    <p class="text-sm text-zinc-400 leading-relaxed">{% if site.data.snippets.los_about_p2 %}{{ site.data.snippets.los_about_p2.body }}{% else %}Run by <a href="https://the-tin.gigkit.site" class="text-los hover:underline">The Tin</a> as part of our charitable mission to give the next generation of Coventry musicians a stage and the skills to own it.{% endif %}</p>
+  </div>
+</section>
+
+<!-- Programme / gigs -->
+<section id="programme" class="py-16 px-4 sm:px-6 bg-black border-t border-zinc-900">
+  <div class="max-w-screen-xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-black tracking-tight uppercase mb-10">The gigs</h2>
+    {% if programme %}
+      {% assign prog_events = programme.events %}
+      {% if prog_events.size > 0 %}
+      <div class="flex flex-col divide-y divide-zinc-900">
+        {% for event_ref in prog_events %}
+          {% assign event = site.data.upcoming_events | where: "slug", event_ref.slug | first %}
+          {% unless event %}{% assign event = site.data.previous_events | where: "slug", event_ref.slug | first %}{% endunless %}
+          <div class="py-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 group hover:bg-zinc-950 px-2 -mx-2 rounded transition-colors">
+            <span class="text-sm font-black text-los uppercase min-w-[160px]">{{ event_ref.start_date | date: "%-d %b %Y" }}</span>
+            <span class="text-base font-bold text-white flex-1">
+              {% if event %}
+                <a href="{% if event.ticket_url %}{{ event.ticket_url }}{% else %}https://the-tin.gigkit.site/events/{{ event.slug }}/{% endif %}"
+                   {% if event.ticket_url %}target="_blank" rel="noopener"{% endif %}
+                   class="hover:text-los transition-colors">{{ event_ref.name }}</a>
+              {% else %}{{ event_ref.name }}{% endif %}
+            </span>
+            {% if event and event.locations.size > 0 %}<span class="text-xs text-zinc-500">{{ event.locations[0].name }}</span>{% endif %}
+            <span class="text-sm font-black text-los uppercase">{% if event %}{% if event.free_entry %}Free{% elsif event.ticket_url %}Tickets{% endif %}{% endif %}</span>
+          </div>
+        {% endfor %}
+      </div>
+      {% else %}<p class="text-zinc-500 text-sm">Next gigs coming soon.</p>{% endif %}
+    {% else %}<p class="text-zinc-500 text-sm">Programme information coming soon.</p>{% endif %}
+  </div>
+</section>
+
+<!-- News -->
+{% if programme and programme.news and programme.news.size > 0 %}
+<section id="news" class="py-16 px-4 sm:px-6 bg-zinc-950 border-t border-zinc-900">
+  <div class="max-w-screen-xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-black tracking-tight uppercase mb-10">News</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for article in programme.news %}
+      <article class="flex flex-col bg-zinc-900 group">
+        {% if article.cover_image %}
+        <a href="{{ article.url }}" class="block overflow-hidden">
+          <img src="{{ article.cover_image.card }}" alt="{{ article.title }}" class="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+        </a>
+        {% endif %}
+        <div class="p-5 flex-1 flex flex-col border-t-2 border-los">
+          <h3 class="text-lg font-black uppercase leading-tight text-white mb-2"><a href="{{ article.url }}" class="hover:text-los transition-colors">{{ article.title }}</a></h3>
+          {% if article.pull_quote %}<p class="text-sm text-zinc-400 leading-relaxed mb-4">{{ article.pull_quote }}</p>{% endif %}
+          <a href="{{ article.url }}" class="mt-auto self-start text-xs font-black uppercase tracking-wide text-los hover:underline">Find out more →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Support -->
+<section class="py-16 px-4 sm:px-6 bg-zinc-900 border-t border-zinc-800">
+  <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-8 items-center">
+    <div class="flex-1">
+      <p class="text-xs tracking-[0.25em] uppercase text-tin-yellow font-bold mb-2">This is The Tin's work</p>
+      <h2 class="text-2xl font-black tracking-tight uppercase mb-3">{% if site.data.snippets.los_support_heading %}{{ site.data.snippets.los_support_heading.body }}{% else %}Help us put young bands on stage{% endif %}</h2>
+      <p class="text-sm text-zinc-400 leading-relaxed max-w-xl">{% if site.data.snippets.los_support_body %}{{ site.data.snippets.los_support_body.body }}{% else %}As a registered charity, The Tin relies on donations, grants and fundraising to run programmes like Live on Stage. If you believe young people deserve a real stage, please consider supporting us.{% endif %}</p>
+    </div>
+    <div class="flex flex-col gap-3 flex-shrink-0">
+      <a href="https://the-tin.gigkit.site/#support" class="bg-tin-red text-white text-sm font-black uppercase px-8 py-3 rounded hover:bg-[#c0474d] transition-colors text-center">Donate to The Tin</a>
+      <a href="https://the-tin.gigkit.site/#newsletter" class="border border-zinc-600 text-zinc-300 text-sm font-semibold px-8 py-3 rounded hover:border-white hover:text-white transition-colors text-center">Stay in the loop</a>
+    </div>
+  </div>
+</section>
