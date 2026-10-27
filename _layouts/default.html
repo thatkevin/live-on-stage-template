@@ -39,31 +39,50 @@
 </head>
 <body class="bg-zinc-950 text-white font-sans antialiased">
 
-<!-- Shared Tin bar: the parent (Tin) nav + logo, kept small and subtle (#523) -->
-<header id="tin-bar" class="sticky top-0 z-50 bg-black/95 backdrop-blur border-b border-zinc-900 transition-transform duration-300">
-  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center h-11 gap-5">
-
-    <!-- The Tin logo -->
-    <a href="{{ site.data.settings.tin_url }}" class="flex items-baseline gap-1 flex-shrink-0 leading-none hover:opacity-80 transition-opacity" aria-label="The Tin — home">
-      <span class="text-xs font-semibold tracking-tight text-zinc-500">The</span>
-      <span class="text-sm font-black tracking-tight text-zinc-200">Tin</span>
-    </a>
-
-    <!-- Tin nav (subtle) -->
-    <nav class="hidden sm:flex items-center gap-0.5 flex-1" aria-label="The Tin navigation">
-      {% for item in site.data.settings.tin_navigation.primary %}
-      <a href="{{ item.path }}" class="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-200 transition-colors whitespace-nowrap">{{ item.label }}</a>
-      {% endfor %}
-    </nav>
-
-    <button id="mobile-open-btn"
-            class="sm:hidden ml-auto flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors rounded"
-            aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-      Menu
-    </button>
+<!-- Two-band header (one sticky unit so the scroll-hide keeps working):
+     Band 1 = the Tin network bar (The Tin + sibling projects), Band 2 =
+     Live on Stage's own menu. Band 1 uses the config-driven network nav when
+     present (#965) and falls back to the siblings until that ships. -->
+<header id="tin-bar" class="sticky top-0 z-50 transition-transform duration-300">
+  <!-- Band 1 — network bar -->
+  <div class="bg-black/95 backdrop-blur border-b border-zinc-900">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center h-10 gap-5">
+      <a href="{{ site.data.settings.tin_url }}" class="flex items-baseline gap-1 flex-shrink-0 leading-none hover:opacity-80 transition-opacity" aria-label="The Tin — home">
+        <span class="text-xs font-semibold tracking-tight text-zinc-500">The</span>
+        <span class="text-sm font-black tracking-tight text-zinc-200">Tin</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-0.5 flex-1" aria-label="Tin network">
+        {% assign netnav = site.data.settings.navigation.network %}
+        {% if netnav and netnav.size > 0 %}
+          {% for item in netnav %}
+          <a href="{{ item.path }}" class="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-200 transition-colors whitespace-nowrap">{{ item.label }}</a>
+          {% endfor %}
+        {% else %}
+          <a href="https://deliaphonic.gigkit.site" class="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-200 transition-colors whitespace-nowrap">Deliaphonic</a>
+          <a href="https://boudica.gigkit.site" class="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-200 transition-colors whitespace-nowrap">Boudica</a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+  <!-- Band 2 — Live on Stage's own menu -->
+  <div class="bg-zinc-950/95 backdrop-blur border-b border-zinc-900">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center h-14 gap-6">
+      <a href="/" class="text-xl font-black tracking-tight uppercase flex-shrink-0 leading-none text-los" aria-label="Live on Stage — home">Live on Stage</a>
+      <nav class="hidden sm:flex items-center gap-1 flex-1" aria-label="Live on Stage navigation">
+        <a href="/#programme" class="px-3 py-2 text-sm font-bold text-zinc-300 hover:text-white transition-colors">Programme</a>
+        <a href="/#news" class="px-3 py-2 text-sm font-bold text-zinc-300 hover:text-white transition-colors">News</a>
+        <a href="/#about" class="px-3 py-2 text-sm font-bold text-zinc-300 hover:text-white transition-colors">About</a>
+      </nav>
+      <a href="https://the-tin.gigkit.site/#support" class="hidden sm:inline-flex items-center bg-los text-black text-sm font-black px-4 py-1.5 rounded hover:opacity-90 transition-opacity flex-shrink-0">Support</a>
+      <button id="mobile-open-btn"
+              class="sm:hidden ml-auto flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors rounded"
+              aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        Menu
+      </button>
+    </div>
   </div>
 </header>
 
@@ -84,10 +103,19 @@
   </div>
   <nav class="flex-1 flex flex-col justify-center px-6 py-8" aria-label="Mobile navigation">
     <ul class="flex flex-col divide-y divide-zinc-900">
-      {% for item in site.data.settings.tin_navigation.primary %}
-      <li><a href="{{ item.path }}" class="mob-link block py-5 text-3xl font-black text-white hover:text-los transition-colors">{{ item.label }}</a></li>
-      {% endfor %}
-      <li><a href="{{ site.data.settings.tin_url }}" class="mob-link block py-5 text-3xl font-black text-zinc-500 hover:text-white transition-colors">← The Tin</a></li>
+      <li><a href="/#programme" class="mob-link block py-5 text-3xl font-black text-white hover:text-los transition-colors">Programme</a></li>
+      <li><a href="/#news" class="mob-link block py-5 text-3xl font-black text-white hover:text-los transition-colors">News</a></li>
+      <li><a href="/#about" class="mob-link block py-5 text-3xl font-black text-white hover:text-los transition-colors">About</a></li>
+      {% assign netnav = site.data.settings.navigation.network %}
+      {% if netnav and netnav.size > 0 %}
+        {% for item in netnav %}
+        <li><a href="{{ item.path }}" class="mob-link block py-5 text-xl font-bold text-zinc-500 hover:text-white transition-colors">{{ item.label }}</a></li>
+        {% endfor %}
+      {% else %}
+      <li><a href="https://deliaphonic.gigkit.site" class="mob-link block py-5 text-xl font-bold text-zinc-500 hover:text-white transition-colors">Deliaphonic</a></li>
+      <li><a href="https://boudica.gigkit.site" class="mob-link block py-5 text-xl font-bold text-zinc-500 hover:text-white transition-colors">Boudica</a></li>
+      <li><a href="{{ site.data.settings.tin_url }}" class="mob-link block py-5 text-xl font-bold text-zinc-500 hover:text-white transition-colors">← The Tin</a></li>
+      {% endif %}
     </ul>
   </nav>
   <div class="px-6 py-5 border-t border-zinc-900">
