@@ -35,6 +35,38 @@ title: Live on Stage — A Tin Music and Arts Project
   </div>
 </section>
 
+<!-- Bands — the site roster (#964) with line-ups (#967) and spec sheets (#968) -->
+{% if site.data.settings.display.show_artists and site.data.artists.size > 0 %}
+<section id="bands" class="py-16 px-4 sm:px-6 bg-black border-t border-zinc-900">
+  <div class="max-w-screen-xl mx-auto">
+    <p class="text-xs tracking-[0.25em] uppercase text-los font-bold mb-4">On the roster</p>
+    <h2 class="text-3xl sm:text-4xl font-black tracking-tight uppercase mb-10">{{ site.data.settings.display.artists_label | default: "Bands" }}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-zinc-800">
+      {% for band in site.data.artists %}
+      <a href="/artists/{{ band.slug }}/" class="group bg-zinc-950 hover:bg-zinc-900 transition-colors flex flex-col">
+        <div class="aspect-square overflow-hidden bg-zinc-900">
+          {% if band.photo %}
+          <img src="{{ band.photo.square | default: band.photo.medium }}" alt="{{ band.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-zinc-700">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+          </div>
+          {% endif %}
+        </div>
+        <div class="p-5 flex flex-col flex-1 gap-2">
+          <h3 class="text-xl font-black uppercase tracking-tight group-hover:text-los transition-colors">{{ band.name }}</h3>
+          {% if band.genres.size > 0 %}
+          <div class="flex flex-wrap gap-1">{% for g in band.genres limit: 3 %}<span class="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">{{ g }}</span>{% endfor %}</div>
+          {% endif %}
+          {% if band.lineup.size > 0 %}<p class="text-xs text-zinc-500 mt-auto pt-2">{{ band.lineup.size }} member{% unless band.lineup.size == 1 %}s{% endunless %}</p>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <!-- Programme / gigs -->
 <section id="programme" class="py-16 px-4 sm:px-6 bg-black border-t border-zinc-900">
   <div class="max-w-screen-xl mx-auto">
