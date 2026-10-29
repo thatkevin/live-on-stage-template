@@ -1,0 +1,104 @@
+---
+layout: default
+---
+{% comment %} The spec sheet lives on the site roster entry (#968), not the base
+   artist, so look this band up in site.data.artists to get it. {% endcomment %}
+{% assign roster_band = site.data.artists | where: "slug", page.slug | first %}
+<div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8">
+
+  <a href="/#bands" class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-white transition-colors mb-6 uppercase tracking-widest">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+    All bands
+  </a>
+
+  <div class="lg:grid lg:gap-12" style="grid-template-columns:1fr 340px">
+
+    <div>
+      <p class="text-[10px] font-bold tracking-widest uppercase text-los mb-3">
+        {% case page.artist_type %}{% when 'band' %}Band{% when 'collective' %}Collective{% when 'dj_act' %}DJ{% else %}Artist{% endcase %}
+      </p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3 uppercase">{{ page.name }}</h1>
+      {% if page.home_city and page.home_city != '' %}
+      <p class="text-sm font-semibold text-zinc-400 mb-6">{{ page.home_city }}</p>
+      {% endif %}
+
+      {% if page.genres and page.genres.size > 0 %}
+      <div class="flex flex-wrap items-center gap-2 mb-8">
+        {% for genre in page.genres %}
+        <span class="text-xs bg-zinc-800 text-zinc-400 px-2.5 py-1 rounded">{{ genre }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if content and content != '' %}
+      <div class="prose prose-invert prose-sm sm:prose-base max-w-none mb-10
+                  prose-headings:font-black prose-headings:text-white
+                  prose-a:text-los prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-white prose-li:text-zinc-300 prose-p:text-zinc-300">
+        {{ content }}
+      </div>
+      {% endif %}
+
+      {% comment %} Playable Spotify embed, derived from an open.spotify.com link {% endcomment %}
+      {% if page.spotify_url and page.spotify_url contains "open.spotify.com" %}
+      {% assign sp_src = page.spotify_url | split: "?" | first | replace: "open.spotify.com/", "open.spotify.com/embed/" %}
+      <div class="mb-10">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-4">Listen</h2>
+        <iframe class="w-full border-0 rounded-lg" style="height:352px" loading="lazy"
+                src="{{ sp_src }}" title="Listen — {{ page.name }}"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      </div>
+      {% endif %}
+
+      {% comment %} #967: band line-up (members + instruments). {% endcomment %}
+      {% if page.lineup and page.lineup.size > 0 %}
+      <div class="mb-10">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-4">The band</h2>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-800 rounded-lg overflow-hidden">
+          {% for member in page.lineup %}
+          <li class="bg-zinc-950 px-4 py-3 flex items-baseline justify-between gap-3">
+            <span class="font-bold text-zinc-100">{{ member.name }}</span>
+            {% if member.instrument and member.instrument != '' %}<span class="text-xs text-los font-semibold uppercase tracking-wide shrink-0">{{ member.instrument }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% comment %} #968: spec sheet (from the roster entry; shown only where the site enables it). {% endcomment %}
+      {% if roster_band and roster_band.spec_sheet and roster_band.spec_sheet.size > 0 %}
+      <div class="mb-10">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-4">Tech spec</h2>
+        <dl class="border-t border-zinc-800">
+          {% for field in roster_band.spec_sheet %}
+          <div class="border-b border-zinc-800 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt class="text-xs font-bold uppercase tracking-wide text-zinc-500 mb-1 sm:mb-0">{{ field.label }}</dt>
+            <dd class="text-sm text-zinc-300 sm:col-span-2 whitespace-pre-line">{{ field.value }}</dd>
+          </div>
+          {% endfor %}
+        </dl>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="mt-8 lg:mt-0">
+      {% if page.photo %}
+      <img src="{{ page.photo.square | default: page.photo.medium }}" alt="{{ page.name }}"
+           class="w-full aspect-square object-cover rounded-lg mb-5 bg-zinc-900">
+      {% endif %}
+
+      {% if page.website_url or page.spotify_url or page.bandcamp_url or page.soundcloud_url or page.youtube_url or page.instagram_url %}
+      <div class="bg-zinc-900 rounded-lg p-5 flex flex-col gap-2.5">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-1">Listen &amp; follow</h2>
+        {% if page.website_url %}<a href="{{ page.website_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">Website &#8599;</a>{% endif %}
+        {% if page.spotify_url %}<a href="{{ page.spotify_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">Spotify &#8599;</a>{% endif %}
+        {% if page.bandcamp_url %}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">Bandcamp &#8599;</a>{% endif %}
+        {% if page.soundcloud_url %}<a href="{{ page.soundcloud_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">SoundCloud &#8599;</a>{% endif %}
+        {% if page.youtube_url %}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">YouTube &#8599;</a>{% endif %}
+        {% if page.instagram_url %}<a href="{{ page.instagram_url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">Instagram &#8599;</a>{% endif %}
+      </div>
+      {% endif %}
+    </aside>
+
+  </div>
+</div>
