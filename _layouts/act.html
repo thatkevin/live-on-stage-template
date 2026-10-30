@@ -1,0 +1,81 @@
+---
+layout: default
+---
+<div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8">
+
+  <a href="/#bands" class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-white transition-colors mb-6 uppercase tracking-widest">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+    All bands
+  </a>
+
+  <div class="lg:grid lg:gap-12" style="grid-template-columns:1fr 340px">
+
+    <div>
+      <p class="text-[10px] font-bold tracking-widest uppercase text-los mb-3">Band</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3 uppercase">{{ page.name }}</h1>
+      {% if page.tagline and page.tagline != '' %}<p class="text-lg text-zinc-400 mb-4">{{ page.tagline }}</p>{% endif %}
+      {% if page.location and page.location != '' %}<p class="text-sm font-semibold text-zinc-400 mb-6">{{ page.location }}{% if page.year_formed %} · formed {{ page.year_formed }}{% endif %}</p>{% endif %}
+
+      {% if page.genres and page.genres.size > 0 %}
+      <div class="flex flex-wrap items-center gap-2 mb-8">
+        {% for genre in page.genres %}<span class="text-xs bg-zinc-800 text-zinc-400 px-2.5 py-1 rounded">{{ genre }}</span>{% endfor %}
+      </div>
+      {% endif %}
+
+      {% if content and content != '' %}
+      <div class="prose prose-invert prose-sm sm:prose-base max-w-none mb-10
+                  prose-headings:font-black prose-headings:text-white
+                  prose-a:text-los prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-white prose-li:text-zinc-300 prose-p:text-zinc-300">
+        {{ content }}
+      </div>
+      {% endif %}
+
+      {% if page.members and page.members.size > 0 %}
+      <div class="mb-10">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-4">The band</h2>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-800 rounded-lg overflow-hidden">
+          {% for member in page.members %}
+          <li class="bg-zinc-950 px-4 py-3 flex items-baseline justify-between gap-3">
+            <span class="font-bold text-zinc-100">{{ member.name }}</span>
+            {% if member.instrument and member.instrument != '' %}<span class="text-xs text-los font-semibold uppercase tracking-wide shrink-0">{{ member.instrument }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if page.press_quotes and page.press_quotes.size > 0 %}
+      <div class="mb-10 space-y-4">
+        {% for q in page.press_quotes %}
+        <blockquote class="border-l-2 border-los pl-4 text-zinc-300 italic">&ldquo;{{ q.quote }}&rdquo;{% if q.source and q.source != '' %}<cite class="block not-italic text-xs text-zinc-500 mt-1">&mdash; {{ q.source }}</cite>{% endif %}</blockquote>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if page.past_gigs and page.past_gigs != '' %}
+      <div class="mb-10">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-4">Played</h2>
+        <p class="text-sm text-zinc-300 whitespace-pre-line">{{ page.past_gigs }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="mt-8 lg:mt-0">
+      {% if page.photo %}
+      <img src="{{ page.photo.square | default: page.photo.medium }}" alt="{{ page.name }}"
+           class="w-full aspect-square object-cover rounded-lg mb-5 bg-zinc-900">
+      {% endif %}
+
+      {% if page.music_links and page.music_links.size > 0 %}
+      <div class="bg-zinc-900 rounded-lg p-5 flex flex-col gap-2.5">
+        <h2 class="text-[10px] font-bold tracking-widest uppercase text-zinc-600 mb-1">Listen &amp; follow</h2>
+        {% for link in page.music_links %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener" class="text-sm font-semibold text-zinc-300 hover:text-los transition-colors">{{ link.platform | default: "Link" }} &#8599;</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </aside>
+
+  </div>
+</div>
