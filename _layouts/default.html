@@ -38,6 +38,7 @@
   {% if site.data.settings.analytics_snippet %}{{ site.data.settings.analytics_snippet }}{% endif %}
 </head>
 <body class="bg-zinc-950 text-white font-sans antialiased">
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">Skip to content</a>
 
 <!-- Two-band header (one sticky unit so the scroll-hide keeps working):
      Band 1 = the Tin network bar (The Tin + sibling projects), Band 2 =
@@ -127,7 +128,9 @@
   </div>
 </div>
 
+<main id="main">
 {{ content }}
+</main>
 
 <footer class="bg-black border-t border-zinc-900">
   <div class="py-10 px-4 sm:px-6">
