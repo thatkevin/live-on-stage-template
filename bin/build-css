@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Rebuild the inlined Tailwind stylesheet in _layouts/default.html (#1040).
+# Requires the `tailwindcss` v4 CLI (npm i -g @tailwindcss/cli, or the
+# tailwindcss-ruby binary). Run from the repo root.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+tmp="$(mktemp -d)"
+tailwindcss -i tailwind.input.css -o "$tmp/app.css" --minify
+CSS_FILE="$tmp/app.css" python3 - <<'PY'
+import os, re, pathlib
+lay = pathlib.Path("_layouts/default.html")
+html = lay.read_text(); css = pathlib.Path(os.environ["CSS_FILE"]).read_text()
+# Replace the built-stylesheet <style> that follows our marker comment.
+pat = re.compile(r'(<!-- Tailwind: built/purged stylesheet[^>]*-->\s*<style>).*?(</style>)', re.S)
+assert pat.search(html), "build marker not found in _layouts/default.html"
+lay.write_text(pat.sub(lambda m: m.group(1)+css+m.group(2), html))
+print("re-inlined", len(css), "bytes of CSS")
+PY
+rm -rf "$tmp"

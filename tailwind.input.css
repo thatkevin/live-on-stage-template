@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", "sans-serif";
+  --color-tin-red: #d85b61;
+  --color-tin-yellow: #edc656;
+  --color-tin-teal: #0b8793;
+  --color-delia-cyan: #00d4e8;
+  --color-delia-red: #e8002a;
+  --color-boudica: #c9a84c;
+  --color-los: #f97316;
+  --color-los-dark: #c2410c;
+}
+
+@source "./**/*.html";
+@source inline("{hover:,focus:,}{text,bg,border}-{tin-red,tin-yellow,tin-teal,delia-cyan,delia-red,boudica,los,los-dark}");
